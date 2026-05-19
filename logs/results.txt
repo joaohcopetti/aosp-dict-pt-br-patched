@@ -1,0 +1,4 @@
+Total words: 170044
+Total words after changes: 165069
+Corrections applied: 918
+Ignored suggestions: 4243

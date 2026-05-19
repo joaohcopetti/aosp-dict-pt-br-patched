@@ -1,0 +1,11 @@
+[project]
+name = "src"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "hunspell>=0.5.5",
+    "spylls>=0.1.7",
+    "unidecode>=1.4.0",
+]
