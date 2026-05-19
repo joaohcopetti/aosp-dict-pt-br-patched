@@ -10,6 +10,9 @@ There's three files in `./logs` dir with the results of the script:
 
 Those files are important so we can spot possible logical errors and improve the script logic when necessary.
 
+## Download
+You can download the `.dict` file [here](https://codeberg.org/JoaoCopetti/aosp-dict-pt-br-fix/releases/download/main_pt_BR/main_pt_BR.dict)
+
 ## Run the script
 The main code is located on `src/main.py`. It uses [uv](https://docs.astral.sh/uv/) as package manager:
 
