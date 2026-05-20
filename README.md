@@ -4,10 +4,10 @@ This script uses Hunspell to correct grammar errors from original AOSP dictionar
 It adds some extra checks to ensure only the grammatically wrong words are corrected, leaving the rest untouched.
 
 There's three files in `./logs` dir with the results of the script:
-- results.txt: Show general results
 - corrected_words.txt: A list of the words that got corrected and replaced
-- ignored_suggestions: Hunspell suggestions that didn't get applied because didn't pass the checks
-
+- ignored_correct_word.txt: Words that got ignored because they were in the list already
+- ignored_suggestions.txt: Hunspell suggestions that didn't get applied because didn't pass the checks
+- results.txt: Show general results
 Those files are important so we can spot possible logical errors and improve the script logic when necessary.
 
 ## Download
