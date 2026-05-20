@@ -76,9 +76,7 @@ def main():
 
     total_words = len(wordlist.words)
 
-    words_processed_count = 0
-    corrected_words_count = 0
-    ignored_suggestions_count = 0
+    count = {"words_processed": 0, "corrected_words": 0, "ignored_suggestions": 0}
 
     corrected_words_file = open("../logs/corrected_words.txt", "w")
     ignored_suggestions_file = open("../logs/ignored_suggestions.txt", "w")
@@ -86,17 +84,25 @@ def main():
     new_words: dict[str, WordAttributes] = dict()
 
     for word, wordlist_attrs in wordlist.words.items():
-        print(f"Processing {words_processed_count} of {total_words}...")
+        # We'll do some checks before actually validating the suggested word
+        # because some cases we can completely ignore it.
+        # Such as:
+        # - Starting with capital letter: it's a proper noun or abbreviation
+        # - Hunspell checked it and the word is correct
+        # - There's no suggestion available, nothing can be done
+        # - Hunspell suggested multiple words trying to find the best suggestion
+
+        print(f"Processing {count['words_processed']} of {total_words}...")
+        count["words_processed"] += 1
 
         # KEEP UNCHANGED
-        # Fist letter uppercase, it's a proper noun or abbreviation.
-        # No relevant changes to be made on abbreviations.
+        # Starting with capital letter: it's a proper noun or abbreviation
         if word[0].isupper():
             new_words[word] = wordlist_attrs
             continue
 
         # KEEP UNCHANGED
-        # Hunspell detected as correct word.
+        # Hunspell checked it and the word is correct
         if spell.spell(word):
             new_words[word] = wordlist_attrs
             continue
@@ -104,7 +110,7 @@ def main():
         suggestions = spell.suggest(word)
 
         # KEEP UNCHANGED
-        # There's nothing to be suggested, so nothing to be done
+        # There's no suggestion available, nothing can be done
         if not suggestions:
             new_words[word] = wordlist_attrs
             continue
@@ -112,32 +118,34 @@ def main():
         suggested_word: str = suggestions[0]
 
         # KEEP UNCHANGED
-        # Sometimes Hunspell will suggest multiple words
-        # for a given word, which is always wrong in this case.
+        # Hunspell suggested multiple words trying to find the best suggestion
         if " " in suggested_word:
             new_words[word] = wordlist_attrs
             continue
 
         if is_valid_correction(word, suggested_word):
+            # Sometimes a corrected word is already in the new words,
+            # because some dictionaries include both wrong and right words.
+            # So in this case just do nothing to keep the word with highest frequency.
             if suggested_word in new_words:
                 continue
 
             new_words[suggested_word] = wordlist_attrs
 
             corrected_words_file.write(f"word={word},new_word={suggested_word}\n")
-            corrected_words_count += 1
+            count["corrected_words"] += 1
 
             continue
         else:
-            ignored_suggestions_count += 1
+            count["ignored_suggestions"] += 1
 
             ignored_suggestions_file.write(f"word={word},suggestion={suggested_word}\n")
 
     with open("../logs/results.txt", "w") as f:
         f.write(f"Total words: {total_words}\n")
         f.write(f"Total words after changes: {len(new_words)}\n")
-        f.write(f"Corrections applied: {corrected_words_count}\n")
-        f.write(f"Ignored suggestions: {ignored_suggestions_count}\n")
+        f.write(f"Corrections applied: {count['corrected_words']}\n")
+        f.write(f"Ignored suggestions: {count['ignored_suggestions']}\n")
 
     corrected_words_file.close()
     ignored_suggestions_file.close()
