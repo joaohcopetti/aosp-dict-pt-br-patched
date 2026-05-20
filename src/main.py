@@ -76,10 +76,16 @@ def main():
 
     total_words = len(wordlist.words)
 
-    count = {"words_processed": 0, "corrected_words": 0, "ignored_suggestions": 0}
+    count = {
+        "words_processed": 0,
+        "corrected_words": 0,
+        "ignored_suggestions": 0,
+        "ignored_corrected_words": 0,
+    }
 
     corrected_words_file = open("../logs/corrected_words.txt", "w")
     ignored_suggestions_file = open("../logs/ignored_suggestions.txt", "w")
+    ignored_corrected_words_file = open("../logs/ignored_corrected_words.txt", "w")
 
     new_words: dict[str, WordAttributes] = dict()
 
@@ -128,6 +134,12 @@ def main():
             # because some dictionaries include both wrong and right words.
             # So in this case just do nothing to keep the word with highest frequency.
             if suggested_word in new_words:
+                ignored_corrected_words_file.write(
+                    f"word={word},suggested_word={suggested_word}\n"
+                )
+
+                count["ignored_corrected_words"] += 1
+
                 continue
 
             new_words[suggested_word] = wordlist_attrs
@@ -146,6 +158,7 @@ def main():
         f.write(f"Total words after changes: {len(new_words)}\n")
         f.write(f"Corrections applied: {count['corrected_words']}\n")
         f.write(f"Ignored suggestions: {count['ignored_suggestions']}\n")
+        f.write(f"Ignored correct words: {count['ignored_corrected_words']}\n")
 
     corrected_words_file.close()
     ignored_suggestions_file.close()
