@@ -1,5 +1,10 @@
+import sys
+from pathlib import Path
+
 import hunspell
 from unidecode import unidecode
+
+sys.path.append(str(Path("../libs").absolute()))
 
 from wordlist_combined import WordAttributes, WordlistCombined
 
@@ -81,7 +86,6 @@ def main():
     new_words: dict[str, WordAttributes] = dict()
 
     for word, wordlist_attrs in wordlist.words.items():
-        words_processed_count += 1
         print(f"Processing {words_processed_count} of {total_words}...")
 
         # KEEP UNCHANGED
