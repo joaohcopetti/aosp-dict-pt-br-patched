@@ -16,7 +16,9 @@ You can download the `.dict` file [here](https://codeberg.org/JoaoCopetti/aosp-d
 ## Run the script
 The main code is located on `src/main.py`. It uses [uv](https://docs.astral.sh/uv/) as package manager:
 
-- Inside the `src` folder run: `uv pip install`
+- Inside the `src` folder run:
+  - `uv venv`
+  - `uv pip install -e .`
 - Then `uv run main.py`
 - It'll use the latest AOSP dictionary (from 2014) as reference, located in `./pt_BT_wordlist.combined`.
 - After finishing, it'll create a new combined file in `./pt_BR_wordlist_patched.combined`.
