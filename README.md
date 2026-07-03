@@ -8,6 +8,7 @@ There's three files in `./logs` dir with the results of the script:
 - ignored_correct_word.txt: Words that got ignored because they were in the list already
 - ignored_suggestions.txt: Hunspell suggestions that didn't get applied because didn't pass the checks
 - results.txt: Show general results
+
 Those files are important so we can spot possible logical errors and improve the script logic when necessary.
 
 ## Download
